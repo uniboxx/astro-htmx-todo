@@ -1,0 +1,10 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+  <h1>Home</h1>
+  <p id="message" hx-get="/api/message" hx-trigger="load" hx-swap="outerHTML">
+    HTMX NOT WORKING
+  </p>
+</Layout>
