@@ -11,6 +11,21 @@
   }
 }
 
+.htmx-indicator {
+  display: none;
+}
+.htmx-request {
+  .text {
+    display: none;
+  }
+  .htmx-indicator {
+    display: inline;
+  }
+  &.htmx-indicator {
+    display: inline;
+  }
+}
+
 /*
 *,
 *::before,

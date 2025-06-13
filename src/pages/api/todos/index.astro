@@ -30,6 +30,7 @@ switch (method) {
     const newTodo = { id: nanoid(), text } as unknown as Task;
 
     await db.insert(Tasks).values(newTodo);
+    todo = newTodo;
     break;
   // update task
   case 'PUT':
@@ -39,6 +40,9 @@ switch (method) {
       .set({ text: `${text}` })
       .where(like(Tasks.id, `%${id}%`));
     todo = id && (await getTodo(id));
+    break;
+  case 'DELETE':
+    await db.delete(Tasks).where(like(Tasks.id, `%${id}%`));
     break;
   // get text of task
   default:
@@ -50,10 +54,6 @@ switch (method) {
 // console.log(todo);
 ---
 
-{
-  method === 'GET' && todo ? (
-    <Task todo={todo} mode="edit" />
-  ) : (
-    <Task todo={todo} />
-  )
-}
+{method === 'GET' && todo && <Task todo={todo} mode="edit" />}
+{(method === 'POST' || method === 'PUT') && todo && <Task todo={todo} />}
+{method === 'DELETE' && id && null}
