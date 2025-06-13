@@ -3,6 +3,7 @@ export const partial = true;
 import { db, Tasks, like } from 'astro:db';
 import Task from '@/components/Task.astro';
 import { nanoid } from 'nanoid';
+import xss from 'xss';
 
 const method = Astro.request.method;
 // console.log(method);
@@ -26,7 +27,7 @@ let todo, text;
 switch (method) {
   // add new task
   case 'POST':
-    text = await getText();
+    text = xss(String(await getText()));
     const newTodo = { id: nanoid(), text } as unknown as Task;
 
     await db.insert(Tasks).values(newTodo);
@@ -34,7 +35,8 @@ switch (method) {
     break;
   // update task
   case 'PUT':
-    text = await getText();
+    text = xss(String(await getText()));
+
     await db
       .update(Tasks)
       .set({ text: `${text}` })
