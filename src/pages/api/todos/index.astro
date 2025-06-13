@@ -28,6 +28,8 @@ switch (method) {
   // add new task
   case 'POST':
     text = xss(String(await getText()));
+    console.log(text);
+    if (!text) break;
     const newTodo = { id: nanoid(), text } as unknown as Task;
 
     await db.insert(Tasks).values(newTodo);
@@ -36,7 +38,8 @@ switch (method) {
   // update task
   case 'PUT':
     text = xss(String(await getText()));
-
+    todo = id && (await getTodo(id));
+    if (!text) break;
     await db
       .update(Tasks)
       .set({ text: `${text}` })
@@ -57,5 +60,7 @@ switch (method) {
 ---
 
 {method === 'GET' && todo && <Task todo={todo} mode="edit" />}
-{(method === 'POST' || method === 'PUT') && todo && <Task todo={todo} />}
+{method === 'POST' && text && <Task todo={todo} />}
+{method === 'PUT' && <Task todo={todo} />}
+
 {method === 'DELETE' && id && null}
