@@ -1,0 +1,60 @@
+---
+import Spinner from "./Spinner.astro";
+
+
+const { task, mode='' } = Astro.props;
+---
+
+<div
+  class="task flex justify-between items-center border-b border-gray-300 py-2"
+>
+  {
+    mode === 'edit' ? (
+      <form class="flex justify-between w-full items-center" hx-put={`/api/todos?id=${task.id}`}
+    hx-target="closest div"
+    hx-swap="outerHTML" >
+      <input
+        class="border border-gray-300 rounded p-2"
+        type="text"
+        value={task.task}
+        name="task"
+      />
+      <button
+    class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+    
+    ><span class="text">Save</span> <Spinner class="htmx-indicator" />
+  </button>
+  </form>
+     ): (
+      <span id={`task-${task.id}`}>{task.task}</span>
+      <button
+    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex"
+    hx-get={`/api/todos?id=${task.id}`}
+    hx-target="closest div"
+    hx-swap="outerHTML"
+    
+    ><span class="text">Edit</span>  <Spinner class="htmx-indicator" />
+  </button>
+    )
+  }
+  
+</div>
+
+<style>
+  .htmx-indicator {
+  display: none;
+}
+.htmx-request {
+  .text{
+    display: none;
+  }
+  .htmx-indicator {
+  display: inline;
+  }
+  &.htmx-indicator {
+  display: inline;
+  
+  }
+}
+
+</style>

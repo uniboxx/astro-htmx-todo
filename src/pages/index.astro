@@ -1,10 +1,67 @@
 ---
+// import seed from 'db/seed';
 import Layout from '../layouts/Layout.astro';
+import { db, Tasks } from 'astro:db';
+import Task from '@/components/Task.astro';
+
+// await seed();
+
+const tasks = await db.select().from(Tasks).all();
 ---
 
 <Layout>
-  <h1>Home</h1>
-  <p id="message" hx-get="/api/message" hx-trigger="load" hx-swap="outerHTML">
+  <h1 class="text-center text-4xl">Home</h1>
+  <p
+    class="text-center text-2xl"
+    id="message"
+    hx-get="/api/message"
+    hx-trigger="load"
+  >
     HTMX NOT WORKING
   </p>
+  <h2 class="text-center text-3xl">Task List</h2>
+  <section id="tasks" class="max-w-sm mx-auto mt-8">
+    {tasks.map((task) => <Task task={task} />)}
+  </section>
+  <section id="task-form" class="max-w-sm mx-auto mt-8">
+    <form
+      id="new-task-form"
+      class="flex justify-center gap-4"
+      action="/api/todos"
+      method="post"
+      hx-post="/api/todos"
+      hx-target="#tasks"
+      hx-swap="beforeend"
+    >
+      <input
+        id="new-task"
+        class="border rounded p-2"
+        type="text"
+        name="task"
+        placeholder="New Task"
+        required
+      />
+
+      <button class="border rounded p-2 cursor-pointer">Add Task</button>
+    </form>
+  </section>
 </Layout>
+
+<script>
+  import htmx from 'htmx.org/dist/htmx.esm.js';
+
+  const newTaskForm = document.getElementById(
+    'new-task-form'
+  ) as HTMLFormElement;
+  const inputEl = document.getElementById('new-task') as HTMLInputElement;
+
+  htmx.on('htmx:afterRequest', (e) => {
+    interface CustomEvent extends Event {
+      detail: {
+        elt: HTMLElement;
+      };
+    }
+    const evt = e as CustomEvent;
+    if (evt.detail.elt === newTaskForm) inputEl.value = '';
+  });
+</script>

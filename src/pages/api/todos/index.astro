@@ -1,0 +1,44 @@
+---
+export const partial = true;
+import { db, Tasks, like } from 'astro:db';
+import Task from '@/components/Task.astro';
+
+const method = Astro.request.method;
+let todo;
+const id = Astro.url.searchParams.get('id');
+
+if (method === 'POST') {
+  const formData = await Astro.request.formData();
+  todo = Object.fromEntries(formData) as unknown as Task;
+
+  await db.insert(Tasks).values(todo);
+} else if (method === 'GET') {
+  todo = await db
+    .select()
+    .from(Tasks)
+    .where(like(Tasks.id, `%${id}%`))
+    .get();
+} else if (method === 'PUT') {
+  const formData = await Astro.request.formData();
+  const text = formData.get('task') as unknown as Task;
+  // console.log(text);
+  await db
+    .update(Tasks)
+    .set({ task: `${text}` })
+    .where(like(Tasks.id, `%${id}%`));
+  todo = await db
+    .select()
+    .from(Tasks)
+    .where(like(Tasks.id, `%${id}%`))
+    .get();
+}
+// console.log(todo);
+---
+
+{
+  method === 'GET' && todo ? (
+    <Task task={todo} mode="edit" />
+  ) : (
+    <Task task={todo} />
+  )
+}
