@@ -2,6 +2,7 @@
 export const partial = true;
 import { db, Tasks, like } from 'astro:db';
 import Task from '@/components/Task.astro';
+import { nanoid } from 'nanoid';
 
 const method = Astro.request.method;
 let todo;
@@ -9,8 +10,10 @@ const id = Astro.url.searchParams.get('id');
 
 if (method === 'POST') {
   const formData = await Astro.request.formData();
-  todo = Object.fromEntries(formData) as unknown as Task;
+  const text = formData.get('task') as unknown as Task;
+  console.log(text);
 
+  todo = { id: nanoid(), task: text, done: false } as unknown as Task;
   await db.insert(Tasks).values(todo);
 } else if (method === 'GET') {
   todo = await db
