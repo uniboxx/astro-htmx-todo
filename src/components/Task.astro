@@ -2,22 +2,23 @@
 import Spinner from "./Spinner.astro";
 
 
-const { task, mode='' } = Astro.props;
+const { todo, mode='' } = Astro.props;
+
 ---
 
 <div
-  class="task flex justify-between items-center border-b border-gray-300 py-2"
+  class="todo flex justify-between items-center border-b border-gray-300 py-2"
 >
   {
     mode === 'edit' ? (
-      <form class="flex justify-between w-full items-center" hx-put={`/api/todos?id=${task.id}`}
-    hx-target="closest div"
+      <form class="flex justify-between w-full items-center" hx-put={`/api/todos?id=${todo.id}`}
+    hx-target="closest div.todo"
     hx-swap="outerHTML" >
       <input
         class="border border-gray-300 rounded p-2"
         type="text"
-        value={task.task}
-        name="task"
+        value={todo.text}
+        name="text"
       />
       <button
     class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
@@ -26,11 +27,11 @@ const { task, mode='' } = Astro.props;
   </button>
   </form>
      ): (
-      <span id={`task-${task.id}`}>{task.task}</span>
+      <span id={`todo-${todo.id}`}>{todo.text}</span>
       <button
     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex"
-    hx-get={`/api/todos?id=${task.id}`}
-    hx-target="closest div"
+    hx-get={`/api/todos?id=${todo.id}`}
+    hx-target="closest div.todo"
     hx-swap="outerHTML"
     
     ><span class="text">Edit</span> <Spinner class="htmx-indicator" />

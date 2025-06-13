@@ -7,18 +7,15 @@ export default async function seed() {
   await db.insert(Tasks).values([
     {
       id: nanoid(),
-      task: 'Plan Video',
-      done: false,
+      text: 'Plan Video',
     },
     {
       id: nanoid(),
-      task: 'Record Video',
-      done: false,
+      text: 'Record Video',
     },
     {
       id: nanoid(),
-      task: 'Edit Video',
-      done: false,
+      text: 'Edit Video',
     },
-  ]);
+  ] as unknown as Task[]);
 }

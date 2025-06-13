@@ -5,43 +5,55 @@ import Task from '@/components/Task.astro';
 import { nanoid } from 'nanoid';
 
 const method = Astro.request.method;
-let todo;
+// console.log(method);
+
 const id = Astro.url.searchParams.get('id');
+// console.log(id);
 
-if (method === 'POST') {
-  const formData = await Astro.request.formData();
-  const text = formData.get('task') as unknown as Task;
-  console.log(text);
-
-  todo = { id: nanoid(), task: text, done: false } as unknown as Task;
-  await db.insert(Tasks).values(todo);
-} else if (method === 'GET') {
-  todo = await db
-    .select()
-    .from(Tasks)
-    .where(like(Tasks.id, `%${id}%`))
-    .get();
-} else if (method === 'PUT') {
-  const formData = await Astro.request.formData();
-  const text = formData.get('task') as unknown as Task;
-  // console.log(text);
-  await db
-    .update(Tasks)
-    .set({ task: `${text}` })
-    .where(like(Tasks.id, `%${id}%`));
-  todo = await db
+async function getTodo(id: string) {
+  return await db
     .select()
     .from(Tasks)
     .where(like(Tasks.id, `%${id}%`))
     .get();
 }
+async function getText() {
+  const formData = await Astro.request.formData();
+  return formData.get('text');
+}
+let todo, text;
+
+switch (method) {
+  // add new task
+  case 'POST':
+    text = await getText();
+    const newTodo = { id: nanoid(), text } as unknown as Task;
+
+    await db.insert(Tasks).values(newTodo);
+    break;
+  // update task
+  case 'PUT':
+    text = await getText();
+    await db
+      .update(Tasks)
+      .set({ text: `${text}` })
+      .where(like(Tasks.id, `%${id}%`));
+    todo = id && (await getTodo(id));
+    break;
+  // get text of task
+  default:
+    if (id === null) return;
+    todo = await getTodo(id);
+    break;
+}
+
 // console.log(todo);
 ---
 
 {
   method === 'GET' && todo ? (
-    <Task task={todo} mode="edit" />
+    <Task todo={todo} mode="edit" />
   ) : (
-    <Task task={todo} />
+    <Task todo={todo} />
   )
 }

@@ -1,9 +1,10 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from '@/layouts/Layout.astro';
 import { db, Tasks } from 'astro:db';
 import Task from '@/components/Task.astro';
-// import seed from 'db/seed';
 
+// run only once at the start after pushed to remote
+// import seed from 'db/seed';
 // await seed();
 
 const tasks = await db.select().from(Tasks).all();
@@ -21,11 +22,11 @@ const tasks = await db.select().from(Tasks).all();
   </p>
   <h2 class="text-center text-3xl">Task List</h2>
   <section id="tasks" class="max-w-sm mx-auto mt-8">
-    {tasks.map((task) => <Task task={task} />)}
+    {tasks.map((todo) => <Task todo={todo} />)}
   </section>
-  <section id="task-form" class="max-w-sm mx-auto mt-8">
+  <section id="todo-form" class="max-w-sm mx-auto mt-8">
     <form
-      id="new-task-form"
+      id="new-todo-form"
       class="flex justify-center gap-4"
       action="/api/todos"
       method="post"
@@ -34,10 +35,10 @@ const tasks = await db.select().from(Tasks).all();
       hx-swap="beforeend"
     >
       <input
-        id="new-task"
+        id="new-todo"
         class="border rounded p-2"
         type="text"
-        name="task"
+        name="text"
         placeholder="New Task"
         required
       />
@@ -51,9 +52,9 @@ const tasks = await db.select().from(Tasks).all();
   import htmx from 'htmx.org/dist/htmx.esm.js';
 
   const newTaskForm = document.getElementById(
-    'new-task-form'
+    'new-todo-form'
   ) as HTMLFormElement;
-  const inputEl = document.getElementById('new-task') as HTMLInputElement;
+  const inputEl = document.getElementById('new-todo') as HTMLInputElement;
 
   htmx.on('htmx:afterRequest', (e) => {
     interface CustomEvent extends Event {

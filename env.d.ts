@@ -1,5 +1,5 @@
 interface Task {
-  id?: number;
-  task: string;
-  done: boolean;
+  id: number;
+  text: string;
+  done?: boolean;
 }

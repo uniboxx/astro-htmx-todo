@@ -6,7 +6,7 @@ const Tasks = defineTable({
     id: column.text({
       primaryKey: true,
     }),
-    task: column.text(),
+    text: column.text(),
     done: column.boolean({ default: false }),
   },
 });
