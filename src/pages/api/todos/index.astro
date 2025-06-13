@@ -18,18 +18,21 @@ async function getTodo(id: string) {
     .where(like(Tasks.id, `%${id}%`))
     .get();
 }
-async function getText() {
+async function getData() {
   const formData = await Astro.request.formData();
-  return formData.get('text');
+  const text = String(formData.get('text'));
+
+  done = String(formData.get('done')) === 'true' ? true : false;
+  return { text, done };
 }
-let todo, text;
+let todo, text, done;
 
 switch (method) {
   // add new task
   case 'POST':
-    text = xss(String(await getText()));
-    console.log(text);
+    text = xss((await getData()).text);
     if (!text) break;
+
     const newTodo = { id: nanoid(), text } as unknown as Task;
 
     await db.insert(Tasks).values(newTodo);
@@ -37,7 +40,7 @@ switch (method) {
     break;
   // update task
   case 'PUT':
-    text = xss(String(await getText()));
+    text = xss((await getData()).text);
     todo = id && (await getTodo(id));
     if (!text) break;
     await db
@@ -46,13 +49,27 @@ switch (method) {
       .where(like(Tasks.id, `%${id}%`));
     todo = id && (await getTodo(id));
     break;
+  case 'PATCH':
+    if (id === null) break;
+    todo = await getTodo(id);
+    done = (await getData()).done;
+
+    const updatedTodo = { ...todo, done };
+    await db
+      .update(Tasks)
+      .set(updatedTodo)
+      .where(like(Tasks.id, `%${id}%`));
+    todo = updatedTodo;
+    break;
   case 'DELETE':
     await db.delete(Tasks).where(like(Tasks.id, `%${id}%`));
     break;
   // get text of task
   default:
     if (id === null) return;
+
     todo = await getTodo(id);
+
     break;
 }
 
@@ -61,6 +78,6 @@ switch (method) {
 
 {method === 'GET' && todo && <Task todo={todo} mode="edit" />}
 {method === 'POST' && text && <Task todo={todo} />}
-{method === 'PUT' && <Task todo={todo} />}
+{(method === 'PUT' || method === 'PATCH') && <Task todo={todo} />}
 
 {method === 'DELETE' && id && null}

@@ -25,6 +25,16 @@
     display: inline;
   }
 }
+.todo.done {
+  text-decoration: line-through wavy 1px #333;
+  color: #777;
+  & ~ button:first-of-type {
+    background-color: brown;
+    &:hover {
+      background-color: rgb(94, 14, 14);
+    }
+  }
+}
 
 /*
 *,

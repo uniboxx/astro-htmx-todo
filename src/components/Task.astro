@@ -2,8 +2,8 @@
 import Spinner from "./Spinner.astro";
 
 
-const { todo, mode='' } = Astro.props;
-
+const { todo, done='false', mode='' } = Astro.props;
+console.log(todo);
 ---
 
 <div
@@ -22,20 +22,30 @@ const { todo, mode='' } = Astro.props;
         name="text"
       />
       <button type="button" id="delete"
-    class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" hx-delete={`/api/todos?id=${todo.id}`} hx-target="closest div.todo" hx-swap="outerHTML" hx-indicator="#delete"
+    class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded cursor-pointer" hx-delete={`/api/todos?id=${todo.id}`} hx-target="closest div.todo" hx-swap="outerHTML" hx-indicator="#delete"
     
     ><span class="text">Delete</span> <Spinner  class="htmx-indicator" />
   </button>
       <button id="save"
-    class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+    class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
     
     ><span class="text">Save</span> <Spinner  class="htmx-indicator" />
   </button>
   </form>
      ): (
-      <span id={`todo-${todo.id}`}>{todo.text}</span>
+      <span id={`todo-${todo.id}`} class:list={["todo",{"done": todo.done}]}>{todo.text}</span>
       <button
-    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex"
+    class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded ml-auto mr-2 cursor-pointer" 
+    
+    hx-patch={`/api/todos?id=${todo.id}`}
+    hx-vals={`{"done": ${!todo.done}}`}
+    hx-target="closest div.todo"
+    hx-swap="outerHTML"
+    
+    ><span class="text">{todo.done?'Undo':'Done'}</span> <Spinner class="htmx-indicator" />
+  </button>
+      <button
+    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
     hx-get={`/api/todos?id=${todo.id}`}
     hx-target="closest div.todo"
     hx-swap="outerHTML"
