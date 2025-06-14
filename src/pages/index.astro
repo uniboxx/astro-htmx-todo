@@ -12,17 +12,16 @@ const tasks = await db.select().from(Tasks).all();
 ---
 
 <Layout>
-  <h1 class="text-center text-4xl">Home</h1>
-  <p
-    class="text-center text-2xl"
+  <h3
+    class="text-center text-xl py-2 text-gray-400"
     id="message"
     hx-get="/api/message"
     hx-trigger="load"
   >
-    HTMX NOT WORKING
-  </p>
-  <h2 class="text-center text-3xl">Todos List</h2>
-  <section id="tasks" class="max-w-sm mx-auto mt-8 px-2">
+    HTMX not working
+  </h3>
+  <h1 class="text-center text-3xl py-4">Todos List</h1>
+  <section id="tasks" class="max-w-sm mx-auto px-2">
     {tasks.map((todo) => <Task todo={todo} />)}
   </section>
   <section id="todo-form" class="max-w-sm mx-auto mt-8">
