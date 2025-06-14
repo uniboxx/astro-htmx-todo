@@ -1,6 +1,6 @@
 ---
 export const partial = true;
-import { db, Tasks, like } from 'astro:db';
+import { db, Tasks, like, eq } from 'astro:db';
 import Task from '@/components/Task.astro';
 import { nanoid } from 'nanoid';
 import xss from 'xss';
@@ -46,7 +46,7 @@ switch (method) {
     await db
       .update(Tasks)
       .set({ text: `${text}` })
-      .where(like(Tasks.id, `%${id}%`));
+      .where(eq(Tasks.id, `${id}`));
     todo = id && (await getTodo(id));
     break;
   case 'PATCH':
@@ -58,11 +58,11 @@ switch (method) {
     await db
       .update(Tasks)
       .set(updatedTodo)
-      .where(like(Tasks.id, `%${id}%`));
+      .where(eq(Tasks.id, `${id}`));
     todo = updatedTodo;
     break;
   case 'DELETE':
-    await db.delete(Tasks).where(like(Tasks.id, `%${id}%`));
+    await db.delete(Tasks).where(eq(Tasks.id, `${id}`));
     break;
   // get text of task
   default:

@@ -16,7 +16,7 @@ console.log(todo);
     hx-swap="outerHTML" 
     hx-indicator="#save">
       <input
-        class="border border-gray-300 rounded p-2 w-full"
+        class="border border-gray-400 rounded p-2 w-full"
         type="text"
         value={todo.text}
         name="text"
@@ -35,8 +35,8 @@ console.log(todo);
      ): (
       <span id={`todo-${todo.id}`} class:list={["todo",{"done": todo.done}]}>{todo.text}</span>
       <button
+      type="button"
     class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded ml-auto mr-2 cursor-pointer" 
-    
     hx-patch={`/api/todos?id=${todo.id}`}
     hx-vals={`{"done": ${!todo.done}}`}
     hx-target="closest div.todo"

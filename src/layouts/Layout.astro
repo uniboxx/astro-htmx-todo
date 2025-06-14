@@ -16,11 +16,15 @@ const { title } = Astro.props;
     <script src="@/lib/htmx.org.ts"></script>
   </head>
   <body hx-boost="true" class="flex flex-col min-h-screen bg-gray-200">
-    <main class="flex-grow">
+    <main class="flex-grow flex flex-col justify-center py-4">
       <slot />
     </main>
-    <footer class="px-2 py-4 text-gray-500 text-center">
-      <p>Stack: Astro, HTMX, Tailwind</p>
+    <div class="bg-gray-300 h-1"></div>
+    <footer class="px-2 py-8 text-gray-500 text-center">
+      <p>
+        <span class="font-bold">Stack: </span>Astro, HTMX, Tailwind, Turso DB
+      </p>
+      <p>Only server side rendering</p>
       <p>No Javascript on client side (except HTMX)</p>
       <p>Copyright &copy; Unibox {new Date().getFullYear()}</p>
     </footer>
