@@ -11,7 +11,7 @@ import Spinner from '@/components/Spinner.astro';
 const tasks = await db.select().from(Tasks).all();
 ---
 
-<Layout>
+<Layout title="Todo List App">
   <h1 class="text-center text-3xl py-8">Todo List</h1>
   <section id="tasks" class="max-w-sm mx-auto px-2 w-full">
     {tasks.map((todo) => <Task todo={todo} />)}
