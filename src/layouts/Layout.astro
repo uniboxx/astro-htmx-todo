@@ -16,21 +16,7 @@ const { title } = Astro.props;
     <script src="@/lib/htmx.org.ts"></script>
   </head>
   <body hx-boost="true">
-    <header>
-      <HeaderLink href="/">Home</HeaderLink>
-      <HeaderLink href="/blog">Blog</HeaderLink>
-      <HeaderLink href="/about">About</HeaderLink>
-    </header>
     <slot />
     <script src="@/lib/app.ts"></script>
   </body>
 </html>
-
-<style>
-  header {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    padding: 20px 0;
-  }
-</style>
