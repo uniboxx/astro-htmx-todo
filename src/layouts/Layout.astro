@@ -1,8 +1,9 @@
 ---
-import HeaderLink from '@/components/HeaderLink.astro';
 import '@/styles/global.css';
 
 const { title } = Astro.props;
+const description =
+  'A simple todo list app made with Astro, HTMX, Tailwind and Turso DB. It is a demo fully functional and ready to deploy on Netlify. No client side Javascript (except HTMX). Server side rendering only.';
 ---
 
 <!doctype html>
@@ -13,7 +14,15 @@ const { title } = Astro.props;
     <link rel="icon" type="image/png" href="/todo-list2.png" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
-    <meta name="description" content="A simple todo list app" />
+    <meta name="description" content={description} />
+    <!-- opengraph tags -->
+    <meta name="og:title" content={title} />
+    <meta name="og:type" content="app" />
+    <meta name="og:url" content="https://astrohtmxtodo.netlify.app" />
+    <meta name="og:image" content="/todo-list2.png" />
+    <meta name="og:site_name" content={title} />
+    <meta name="og:description" content={description} />
+    <!-- HTMX -->
     <script src="@/lib/htmx.org.ts"></script>
   </head>
   <body hx-boost="true" class="flex flex-col min-h-screen bg-gray-200">
