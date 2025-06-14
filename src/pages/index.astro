@@ -21,8 +21,8 @@ const tasks = await db.select().from(Tasks).all();
   >
     HTMX NOT WORKING
   </p>
-  <h2 class="text-center text-3xl">Task List</h2>
-  <section id="tasks" class="max-w-sm mx-auto mt-8">
+  <h2 class="text-center text-3xl">Todos List</h2>
+  <section id="tasks" class="max-w-sm mx-auto mt-8 px-2">
     {tasks.map((todo) => <Task todo={todo} />)}
   </section>
   <section id="todo-form" class="max-w-sm mx-auto mt-8">
